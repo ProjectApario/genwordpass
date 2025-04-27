@@ -1,4 +1,4 @@
-module github.com/projectapario/genwordpass
+module github.com/ProjectApario/genwordpass
 
 go 1.24
 
