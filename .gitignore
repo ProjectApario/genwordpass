@@ -1,0 +1,12 @@
+*.log
+.DS_Store
+.vscode
+bin/
+!bin/.keep
+outputs/
+!outputs/.keep
+output/
+output/.keep
+._*
+.idea
+summaries/
