@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math/big"
 	"os"
 	"strings"
 
@@ -141,7 +142,7 @@ func (ima *Phoenix) generateWordPassword() (string, error) {
 	wordCount := *ima.Persona.Int(PersonaWordCount)
 	loadErr := ima.loadWords()
 	if loadErr != nil {
-		return "NO_PASSWORD", loadErr
+		return "NO_WORDS", loadErr
 	}
 	totalWords := len(acceptableWords)
 	words := make([]string, wordCount)
@@ -151,12 +152,19 @@ func (ima *Phoenix) generateWordPassword() (string, error) {
 
 	var sb = strings.Builder{}
 	cnt := 0
+	ups, downs := 0, 0
 	total := len(acceptableWordSeparators)
 	for _, word := range words {
 		cnt++
 		sep := strings.Builder{}
 		for i := 1; i <= *ima.Persona.Int(PersonaSeparators); i++ {
 			sep.WriteString(string(acceptableWordSeparators[ima.randomInt(total)]))
+		}
+		if b, e := ima.ShouldCapitalize(); e == nil && b && (downs >= ups) {
+			ups++
+			word = strings.ToUpper(word)
+		} else {
+			downs++
 		}
 		if cnt == total {
 			sb.WriteString(word)
@@ -165,4 +173,16 @@ func (ima *Phoenix) generateWordPassword() (string, error) {
 		}
 	}
 	return sb.String(), nil
+}
+
+func (ima *Phoenix) ShouldCapitalize() (b bool, e error) {
+	m := big.NewInt(2)
+	n := new(big.Int)
+	n, e = rand.Int(rand.Reader, m)
+	if e != nil {
+		return
+	}
+	var i int64 = n.Int64()
+	b = i == 1
+	return
 }
