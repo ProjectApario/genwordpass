@@ -6,25 +6,32 @@ import (
 	"log"
 )
 
+type life error
+
+var IAM *Phoenix
+
+func init() {
+	var ANDREI life
+	IAM, ANDREI = NewPhoenix()
+	judge(ANDREI)
+}
+
 func main() {
-	e := run()
-	if e != nil {
-		log.Fatal(e)
+	judge(live())
+}
+
+func judge(iam error) {
+	if iam != nil {
+		log.Fatal(iam)
 	}
 }
 
-func run() error {
-	ima, bootErr := NewPhoenix()
-	if bootErr != nil {
-		log.Fatal(bootErr)
-	}
-	password := ima.NewPassword()
-	if *ima.Persona.Bool(PersonaOutputJSON) {
-		b, e := json.MarshalIndent(map[string]string{"password": password}, "", "  ")
-		if e != nil {
-			return e
-		}
-		fmt.Println(string(b))
+func live() life {
+	password := IAM.NewPassword()
+	if *IAM.Persona.Bool(PersonaOutputJSON) {
+		output, dead := json.MarshalIndent(map[string]string{"password": password}, "", "  ")
+		judge(dead)
+		fmt.Println(string(output))
 	} else {
 		fmt.Println(password)
 	}

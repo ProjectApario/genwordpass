@@ -19,7 +19,7 @@ func TestRun(t *testing.T) {
 	t.Run("Version", func(t *testing.T) {
 		os.Args = []string{os.Args[0], "-version"}
 		assert.Panics(t, func() { // this is expected with NoError
-			assert.NoError(t, run()) // this calls os.Exit(0) which causes panic in tests
+			assert.NoError(t, live()) // this calls os.Exit(0) which causes panic in tests
 		})
 	})
 	t.Run("Help", func(t *testing.T) {
@@ -34,17 +34,17 @@ func TestRun(t *testing.T) {
 	os.Stdout = os.NewFile(uintptr(syscall.Stdin), os.DevNull) // protect from printing passwords to stdout
 	t.Run("JSON", func(t *testing.T) {
 		os.Args = []string{os.Args[0], "-json"}
-		assert.NoError(t, run())
+		assert.NoError(t, live())
 	})
 	t.Run("TEXT", func(t *testing.T) {
 		os.Args = []string{os.Args[0]}
-		assert.NoError(t, run())
+		assert.NoError(t, live())
 	})
 	langs := []string{"en", "de", "fr", "es", "ro", "ru"}
 	for _, lang := range langs {
 		t.Run(lang, func(t *testing.T) {
 			os.Args = []string{os.Args[0], "-languages=" + lang}
-			assert.NoError(t, run())
+			assert.NoError(t, live())
 		})
 	}
 }
