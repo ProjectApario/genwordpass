@@ -160,6 +160,9 @@ func (ima *Phoenix) generateWordPassword() (string, error) {
 		for i := 1; i <= *ima.Persona.Int(PersonaSeparators); i++ {
 			sep.WriteString(string(acceptableWordSeparators[ima.randomInt(total)]))
 		}
+		// Capitalize the word only if ShouldCapitalize() returns true and the number of lowercase transformations (downs)
+		// is greater than or equal to the number of uppercase transformations (ups). This ensures a balance between
+		// uppercase and lowercase transformations in the generated password.
 		if b, e := ima.ShouldCapitalize(); e == nil && b && (downs >= ups) {
 			ups++
 			word = strings.ToUpper(word)
